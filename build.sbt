@@ -8,6 +8,7 @@ lazy val root = (project in file("."))
     name := "Letter Writer Manager",
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "0.7.29" % Test,
-      "com.github.pathikrit" %% "better-files" % "3.9.2"
+      "com.github.pathikrit" %% "better-files" % "3.9.2",
+      "org.scala-lang.modules" %% "scala-xml" % "2.2.0"
     )
   )
