@@ -1,6 +1,6 @@
-writer_id,slugname,lastname,forname,birth,death
-w1,gandalf-le-gris,le Gris,Gandalf,1000,3019
-w2,aragorn-elessar-telcontar,Elessar Telcontar,Aragorn,2931,3051
-w3,frodon-sacquet,Sacquet,Frodon,2968,3021
-w4,sam-gamegie,Gamegie,Sam,2980,3042
-w5,bilbon-sacquet,Sacquet,Bilbon,2890,3021
+quote;number;fullname;birth;death
+Can_1_1_1;10;le Gris, Gandalf;;3019
+Can_1_1_1;20;Elessar Telcontar, Aragorn;2931;
+Can_1_1_1;30;Sacquet, Frodon;2968;3021
+Can_1_1_1;40;Gamegie, Sam;2980;3042
+Can_1_1_1;50;Sacquet, Bilbon;;

@@ -2,69 +2,110 @@ package ch.cjbg.lwm
 
 import better.files._
 
+import scala.language.existentials
+import scala.util.Failure
+import scala.xml.PrettyPrinter
+
 import File._
 
-case class Image(path: String, writerId: String)
+case class Image(path: String, writerFullname: String)
 case class Writer(
-    id: String,
-    slugname: String,
-    lastname: String,
-    forname: String,
-    birth: String,
-    death: String
+    quote: String,
+    number: String,
+    fullname: String,
+    birth: Option[String],
+    death: Option[String]
 )
 
 object Main extends App {
-  val imagesFile = File("data/images.csv")
-  val writersFile = File("data/writers.csv")
+  args.toList match {
+    case writersFileName :: imagesFileName :: separator :: outputDirName :: outXmlFileName :: Nil => {
+      println(
+        s"writersFileName: '$writersFileName', imagesFileName: '$imagesFileName', separator: '$separator', outputDirName: '$outputDirName', outXmlFileName: '$outXmlFileName'"
+      )
 
-  val images = imagesFile.lines.toList
-    .drop(1)
-    .map(l =>
-      l.split(",").toList match {
-        case path :: id :: Nil => Image(path, id)
-        case _                 => sys.exit(42)
+      val writersFile = File(writersFileName)
+      val imagesFile = File(imagesFileName)
+
+      val writers = writersFile.lines.toList
+        .drop(1)
+        .map(l =>
+          l.split(separator, -1).toList match {
+            case quote :: number :: fullname :: birth :: death :: Nil =>
+              Writer(
+                quote,
+                number,
+                fullname,
+                Option.unless(birth.isEmpty)(birth),
+                Option.unless(death.isEmpty)(death)
+              )
+            case _ => sys.error(s"Error in writers file, line: '$l'")
+          }
+        )
+
+      val images = imagesFile.lines.toList
+        .drop(1)
+        .map(l =>
+          l.split(separator, -1).toList match {
+            case path :: fullname :: Nil => Image(path, fullname)
+            case _ => sys.error(s"Error in images file, line: '$l'")
+          }
+        )
+
+      val writerFullnames = writers.map(_.fullname)
+      images
+        .map(_.writerFullname)
+        .toSet[String]
+        .foreach(iwf =>
+          if (!writerFullnames.contains(iwf))
+            sys.error(s"'$iwf' not exist in writers files")
+        )
+
+      images.foreach(i =>
+        if (File(i.path).notExists)
+          sys.error(
+            s"Image file '${i.path}' for writer '${i.writerFullname}' not exists"
+          )
+      )
+
+      val writersMap = writers.groupBy(_.fullname).map { case (fullname, ws) =>
+        (fullname, ws.head)
       }
-    )
+      val imagesMap = images.groupBy(_.writerFullname)
 
-  val writers = writersFile.lines.toList
-    .drop(1)
-    .map(l =>
-      l.split(",").toList match {
-        case id :: slugname :: lastname :: forname :: birth :: death :: Nil =>
-          Writer(id, slugname, lastname, forname, birth, death)
-        case _ => sys.exit(42)
+      val outputDir =
+        File(outputDirName).delete(true).createDirectoryIfNotExists()
+      val xmlFile = File(outXmlFileName).delete(true).touch()
+      val pp = new PrettyPrinter(120, 2)
+
+      for {
+        (fullname, writer) <- writersMap
+        imagesPaths <- imagesMap.get(fullname)
+      } yield {
+        val writerDir =
+          outputDir.createChild(s"${writer.quote}_${writer.number}", true)
+        imagesPaths.foreach(i => File(s"${i.path}").copyToDirectory(writerDir))
+
+        val dateElem = (writer.birth, writer.death) match {
+          case (Some(b), Some(d)) => s"$b/$d"
+          case (Some(b), None)    => b
+          case (None, Some(d))    => d
+          case (None, None)       => "..."
+        }
+        val xmlWriter = <node>
+          <fullname>{writer.fullname}</fullname>
+          <date>{dateElem}</date>
+        </node>
+        xmlFile.appendLine(pp.format(xmlWriter))
       }
-    )
-
-  if (writers.map(_.id).size != writers.map(_.id).toSet.size) {
-    println("Non unique ids in writers file")
-    sys.exit(42)
+    }
+    case _ => {
+      println(
+        "Give args: <writersFileName> <imagesFileName> <separator> <outputDirName> <outXmlFileName>"
+      )
+      println("Example: data/writers.csv data/images.csv ; output out.xml")
+      sys.exit(42)
+    }
   }
-  if (images.map(_.writerId).toSet != writers.map(_.id).toSet) {
-    println("Not all ids match in two files")
-    sys.exit(42)
-  }
-
-  val imagesMap = images.groupBy(_.writerId)
-  val writersMap = writers.groupBy(_.id).map { case (id, ws) => (id, ws.head) }
-  val outputDir = File("output").createDirectoryIfNotExists()
-  val xmlFile = File("out.xml").touch()
-
-  for {
-    (writerId, writer) <- writersMap
-    imagesPaths <- imagesMap.get(writerId)
-  } yield {
-    val writerDir = outputDir.createChild(s"$writerId-${writer.slugname}", true)
-    imagesPaths.foreach(i => File(s"${i.path}").copyToDirectory(writerDir))
-
-    val xmlWriter = <node>
-        <lastname>{writer.lastname}</lastname>
-        <forname>{writer.forname}</forname>
-        <date>{writer.birth}/{writer.death}</date>
-      </node>
-    xmlFile.appendText(xmlWriter.toString())
-  }
-
   // outputDir.zipTo(File("output.zip"))
 }
