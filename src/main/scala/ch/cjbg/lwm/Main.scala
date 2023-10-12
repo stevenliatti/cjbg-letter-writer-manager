@@ -4,8 +4,6 @@ import better.files._
 
 import java.time.LocalDateTime
 import scala.language.existentials
-import scala.util.Failure
-import scala.xml.PrettyPrinter
 
 import File._
 
@@ -132,7 +130,6 @@ object Main extends App {
       File(outputDirName).delete(true).createDirectoryIfNotExists()
     val outXmlFileName = s"$outputDirName/writers.xml"
     val xmlFile = File(outXmlFileName).delete(true).touch()
-    val pp = new PrettyPrinter(120, 2)
 
     for {
       (fullname, writer) <- writersMap
@@ -146,25 +143,32 @@ object Main extends App {
         File(i.path).copyToDirectory(writerDir)
       })
       log(s"Append '${writer.fullname}' to '$outXmlFileName'")
-      xmlAppend(writer, xmlFile, pp)
+      xmlAppend(writer, xmlFile)
     }
 
     // TODO zip outputDir ?
     // outputDir.zipTo(File("output.zip"))
   }
 
-  def xmlAppend(writer: Writer, xmlFile: File, pp: PrettyPrinter): Unit = {
+  def xmlAppend(writer: Writer, xmlFile: File): Unit = {
     val dateElem = (writer.birth, writer.death) match {
-      case (Some(b), Some(d)) => s"$b/$d"
-      case (Some(b), None)    => b
-      case (None, Some(d))    => d
-      case (None, None)       => "..."
+      case (Some(b), Some(d)) =>
+        s"<Isad313Dates normal=\"$b/$d\">$b-$d</Isad313Dates>"
+      case (Some(b), None) =>
+        s"<Isad313Dates normal=\"$b\">Né en $b</Isad313Dates>"
+      case (None, Some(d)) =>
+        s"<Isad313Dates normal=\"$d\">Mort en $d</Isad313Dates>"
+      case (None, None) =>
+        "<Isad313Dates normal=\"----\">Dates de vie inconnues</Isad313Dates>"
     }
-    val xmlWriter = <node>
-          <fullname>{writer.fullname}</fullname>
-          <date>{dateElem}</date>
-        </node>
-    xmlFile.appendLine(pp.format(xmlWriter))
+    val xmlNode = s"""|<Pièce>
+      |<Isad311Référence>${writer.quote}/${writer.number}</Isad311Référence>
+      |<Isad312Intitulé>${writer.fullname}</Isad312Intitulé>
+      |$dateElem
+      |<Marc100Personnalité>${writer.fullname}</Marc100Personnalité>
+      |</Pièce>""".stripMargin
+
+    xmlFile.appendLine(xmlNode)
     ()
   }
 }
