@@ -1,4 +1,4 @@
-val version = "0.1.0-SNAPSHOT"
+val version = "0.1.0"
 
 ThisBuild / scalaVersion     := "2.13.11"
 ThisBuild / organization     := "ch.cjbg"
@@ -12,7 +12,6 @@ lazy val root = (project in file("."))
     assembly / assemblyJarName := s"lwm-$version.jar",
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "0.7.29" % Test,
-      "com.github.pathikrit" %% "better-files" % "3.9.2",
-      "org.scala-lang.modules" %% "scala-xml" % "2.2.0"
+      "com.github.pathikrit" %% "better-files" % "3.9.2"
     )
   )
