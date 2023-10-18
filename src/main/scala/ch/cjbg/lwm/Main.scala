@@ -57,9 +57,9 @@ object Main extends App {
     }
     case _ => {
       println(
-        "Give args: <writersFileName> <imagesFileName> <separator> <outputDirName> <outXmlFileName>"
+        "Give args: <writersFileName> <imagesFileName> <separator> <outputDirName>"
       )
-      println("Example: data/writers.csv data/images.csv ; output out.xml")
+      println("Example: data/writers.csv data/images.csv \";\" output")
       sys.exit(42)
     }
   }
