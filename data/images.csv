@@ -1,31 +1,31 @@
-path;writer_fullname
-/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22883-1.jpg;le Gris, Gandalf
-/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22884-1.jpg;le Gris, Gandalf
-/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22888-1.jpg;le Gris, Gandalf
-/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22890-1.jpg;le Gris, Gandalf
-/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22892-1.jpg;Elessar Telcontar, Aragorn
-/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22897-1.jpg;Elessar Telcontar, Aragorn
-/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22900-1.jpg;Elessar Telcontar, Aragorn
-/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22902-1.jpg;Elessar Telcontar, Aragorn
-/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22903-1.jpg;Elessar Telcontar, Aragorn
-/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22905-1.jpg;Sacquet, Frodon
-/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22907-1.jpg;Sacquet, Frodon
-/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22908-1.jpg;Sacquet, Frodon
-/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22910-1.jpg;Sacquet, Frodon
-/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22911-1.jpg;Sacquet, Frodon
-/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22913-1.jpg;Sacquet, Frodon
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22915-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22917-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22919-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22922-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22924-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22926-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22928-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22930-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22932-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22937-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22946-1.jpg;Gamegie, Sam
-/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22948-1.jpg;Sacquet, Bilbon
-/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22951-1.jpg;Sacquet, Bilbon
-/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22954-1.jpg;Sacquet, Bilbon
-/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22957-1.jpg;Sacquet, Bilbon
+writer_fullname;path
+le Gris, Gandalf;/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22883-1.jpg
+le Gris, Gandalf;/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22884-1.jpg
+le Gris, Gandalf;/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22888-1.jpg
+le Gris, Gandalf;/home/steven/tmp/letter-writer-manager/w1/Hb_2022_22890-1.jpg
+Elessar Telcontar, Aragorn;/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22892-1.jpg
+Elessar Telcontar, Aragorn;/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22897-1.jpg
+Elessar Telcontar, Aragorn;/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22900-1.jpg
+Elessar Telcontar, Aragorn;/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22902-1.jpg
+Elessar Telcontar, Aragorn;/home/steven/tmp/letter-writer-manager/w2/Hb_2022_22903-1.jpg
+Sacquet, Frodon;/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22905-1.jpg
+Sacquet, Frodon;/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22907-1.jpg
+Sacquet, Frodon;/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22908-1.jpg
+Sacquet, Frodon;/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22910-1.jpg
+Sacquet, Frodon;/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22911-1.jpg
+Sacquet, Frodon;/home/steven/tmp/letter-writer-manager/w3/Hb_2022_22913-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22915-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22917-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22919-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22922-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22924-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22926-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22928-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22930-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22932-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22937-1.jpg
+Gamegie, Sam;/home/steven/tmp/letter-writer-manager/w4/Hb_2022_22946-1.jpg
+Sacquet, Bilbon;/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22948-1.jpg
+Sacquet, Bilbon;/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22951-1.jpg
+Sacquet, Bilbon;/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22954-1.jpg
+Sacquet, Bilbon;/home/steven/tmp/letter-writer-manager/w5/Hb_2022_22957-1.jpg

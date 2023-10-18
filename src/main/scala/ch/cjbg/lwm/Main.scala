@@ -6,6 +6,9 @@ import java.time.LocalDateTime
 import scala.language.existentials
 
 import File._
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
 
 object Main extends App {
   args.toList match {
@@ -19,38 +22,16 @@ object Main extends App {
       val imagesFile = File(imagesFileName)
 
       log("Decoding CSV files")
-      val writers = decodeCsv(
-        writersFile,
-        separator,
-        l =>
-          l match {
-            case quote :: number :: fullname :: birth :: death :: Nil =>
-              Writer(
-                quote,
-                number,
-                fullname,
-                Option.unless(birth.isEmpty)(birth),
-                Option.unless(death.isEmpty)(death)
-              )
-            case _ => sys.error(s"Error in writers file, line: '$l'")
-          }
-      )
+      val writers = processWriters(writersFile, separator)
+      val images = processImages(imagesFile, separator)
 
-      val images = decodeCsv(
-        imagesFile,
-        separator,
-        l =>
-          l match {
-            case path :: fullname :: Nil => Image(path, fullname)
-            case _ => sys.error(s"Error in images file, line: '$l'")
-          }
-      )
-
-      log("Check fullames existence / matching in both files")
-      checkImagesFullnamesExistence(images, writers)
+      log("Check fullnames existence / matching in both files")
+      val tryCheckImagesExist = checkImagesFullnamesExistence(images, writers)
+      returnSuccessPrintFailures(tryCheckImagesExist)
 
       log("Check images paths existence")
-      checkImagesPathsExistence(images)
+      val tryCheckImagesPath = checkImagesPathsExistence(images)
+      returnSuccessPrintFailures(tryCheckImagesPath)
 
       log("Make directories, copy images sources and write XML file")
       mkdirsAndCopyAndXmlWriting(writers, images, outputDirName)
@@ -68,7 +49,7 @@ object Main extends App {
   // Case classes and functions
   // ##########################
 
-  case class Image(path: String, writerFullname: String)
+  case class Image(writerFullname: String, path: String)
   case class Writer(
       quote: String,
       number: String,
@@ -82,6 +63,43 @@ object Main extends App {
     println(s"$now - $x")
   }
 
+  def processWriters(writersFile: File, separator: String): List[Writer] = {
+    val tryWriters = decodeCsv(
+      writersFile,
+      separator,
+      l =>
+        Try {
+          l match {
+            case quote :: number :: fullname :: birth :: death :: Nil =>
+              Writer(
+                quote,
+                number,
+                fullname,
+                Option.unless(birth.isEmpty)(birth),
+                Option.unless(death.isEmpty)(death)
+              )
+            case _ => sys.error(s"Error in writers file, line: '$l'")
+          }
+        }
+    )
+    returnSuccessPrintFailures(tryWriters)
+  }
+
+  def processImages(imagesFile: File, separator: String): List[Image] = {
+    val tryImages = decodeCsv(
+      imagesFile,
+      separator,
+      l =>
+        Try {
+          l match {
+            case fullname :: path :: Nil => Image(fullname, path)
+            case _ => sys.error(s"Error in images file, line: '$l'")
+          }
+        }
+    )
+    returnSuccessPrintFailures(tryImages)
+  }
+
   def decodeCsv[T](
       file: File,
       separator: String,
@@ -93,27 +111,38 @@ object Main extends App {
     ls.map(l => decode(l.split(separator, -1).toList))
   }
 
+  def returnSuccessPrintFailures[T](tries: List[Try[T]]): List[T] = {
+    val failures = tries.collect { case Failure(v) => v }
+    if (failures.nonEmpty) {
+      failures.foreach(println)
+      sys.exit(42)
+    }
+    tries.collect { case Success(v) => v }
+  }
+
   def checkImagesFullnamesExistence(
       images: List[Image],
       writers: List[Writer]
-  ): Unit = {
+  ): List[Try[Any]] = {
     val writerFullnames = writers.map(_.fullname)
     images
       .map(_.writerFullname)
       .toSet[String]
-      .foreach(iwf =>
-        if (!writerFullnames.contains(iwf))
-          sys.error(s"'$iwf' not exist in writers files")
-      )
+      .filter(iwf => !writerFullnames.contains(iwf))
+      .map(iwf => Try(sys.error(s"'$iwf' not exist in writers files")))
+      .toList
   }
 
-  def checkImagesPathsExistence(images: List[Image]): Unit = {
-    images.foreach(i =>
-      if (File(i.path).notExists)
-        sys.error(
-          s"Image file '${i.path}' for writer '${i.writerFullname}' not exists"
+  def checkImagesPathsExistence(images: List[Image]): List[Try[Any]] = {
+    images
+      .filter(i => File(i.path).notExists)
+      .map(i =>
+        Try(
+          sys.error(
+            s"Image file '${i.path}' for writer '${i.writerFullname}' not exists"
+          )
         )
-    )
+      )
   }
 
   def mkdirsAndCopyAndXmlWriting(
@@ -145,9 +174,6 @@ object Main extends App {
       log(s"Append '${writer.fullname}' to '$outXmlFileName'")
       xmlAppend(writer, xmlFile)
     }
-
-    // TODO zip outputDir ?
-    // outputDir.zipTo(File("output.zip"))
   }
 
   def xmlAppend(writer: Writer, xmlFile: File): Unit = {
