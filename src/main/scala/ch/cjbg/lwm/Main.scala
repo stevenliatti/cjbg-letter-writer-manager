@@ -12,26 +12,19 @@ import scala.util.Failure
 
 object Main extends App {
   args.toList match {
+    case writersFileName :: imagesFileName :: separator :: Nil => {
+      log(
+        s"writersFileName: '$writersFileName', imagesFileName: '$imagesFileName', separator: '$separator'"
+      )
+
+      check(writersFileName, imagesFileName, separator)
+    }
     case writersFileName :: imagesFileName :: separator :: outputDirName :: Nil => {
       log(
         s"writersFileName: '$writersFileName', imagesFileName: '$imagesFileName', separator: '$separator', outputDirName: '$outputDirName'"
       )
 
-      log(s"Reading '$writersFileName' and '$imagesFileName' CSV files")
-      val writersFile = File(writersFileName)
-      val imagesFile = File(imagesFileName)
-
-      log("Decoding CSV files")
-      val writers = processWriters(writersFile, separator)
-      val images = processImages(imagesFile, separator)
-
-      log("Check fullnames existence / matching in both files")
-      val tryCheckImagesExist = checkImagesFullnamesExistence(images, writers)
-      returnSuccessPrintFailures(tryCheckImagesExist)
-
-      log("Check images paths existence")
-      val tryCheckImagesPath = checkImagesPathsExistence(images)
-      returnSuccessPrintFailures(tryCheckImagesPath)
+      val (writers, images) = check(writersFileName, imagesFileName, separator)
 
       log("Make directories, copy images sources and write XML file")
       mkdirsAndCopyAndXmlWriting(writers, images, outputDirName)
@@ -57,6 +50,30 @@ object Main extends App {
       birth: Option[String],
       death: Option[String]
   )
+
+  def check(
+      writersFileName: String,
+      imagesFileName: String,
+      separator: String
+  ) = {
+    log(s"Reading '$writersFileName' and '$imagesFileName' CSV files")
+    val writersFile = File(writersFileName)
+    val imagesFile = File(imagesFileName)
+
+    log("Decoding CSV files")
+    val writers = processWriters(writersFile, separator)
+    val images = processImages(imagesFile, separator)
+
+    log("Check fullnames existence / matching in both files")
+    val tryCheckImagesExist = checkImagesFullnamesExistence(images, writers)
+    returnSuccessPrintFailures(tryCheckImagesExist)
+
+    log("Check images paths existence")
+    val tryCheckImagesPath = checkImagesPathsExistence(images)
+    returnSuccessPrintFailures(tryCheckImagesPath)
+
+    (writers, images)
+  }
 
   def log(x: Any) = {
     val now = LocalDateTime.now()
