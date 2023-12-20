@@ -1,4 +1,4 @@
-val version = "0.2.0"
+val version = "0.3.0"
 
 ThisBuild / scalaVersion     := "2.13.11"
 ThisBuild / organization     := "ch.cjbg"

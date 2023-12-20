@@ -186,7 +186,9 @@ object Main extends App {
       val writerDir = outputDir.createChild(writerDirName, true)
       imagesPaths.foreach(i => {
         log(s"Copy '${i.path}' to '$outputDirName/$writerDirName'")
-        File(i.path).copyToDirectory(writerDir)
+        val destinationImage = File(i.path).copyToDirectory(writerDir)
+        val newName = destinationImage.name.split("_").toList.last
+        destinationImage.renameTo(newName)
       })
       log(s"Append '${writer.fullname}' to '$outXmlFileName'")
       xmlAppend(writer, xmlFile)
