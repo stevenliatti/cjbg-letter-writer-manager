@@ -11,6 +11,7 @@ import scala.util.Success
 import scala.util.Failure
 import scala.io.Codec
 import java.nio.charset.CodingErrorAction
+import java.nio.charset.Charset
 
 object Main extends App {
   args.toList match {
@@ -125,10 +126,8 @@ object Main extends App {
       decode: List[String] => T,
       dropFirstLine: Boolean = true
   ): List[T] = {
-    implicit val codec: Codec = Codec("UTF-8")
-    val errorCodec = codec.onUnmappableCharacter(CodingErrorAction.REPORT)
-    println(errorCodec)
-    val fileToList = file.lines.toList
+    implicit val c = Charset.forName("ISO-8859-1") //ajoute le 29 04 2024 pour utilise le même encodage que celui du fichier CSV
+    val fileToList = file.lines(c).toList
     val ls = if (dropFirstLine) fileToList.drop(1) else fileToList
     ls.map(l => decode(l.split(separator, -1).toList))
   }
