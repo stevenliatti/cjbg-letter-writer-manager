@@ -9,6 +9,8 @@ import File._
 import scala.util.Try
 import scala.util.Success
 import scala.util.Failure
+import scala.io.Codec
+import java.nio.charset.CodingErrorAction
 
 object Main extends App {
   args.toList match {
@@ -123,6 +125,9 @@ object Main extends App {
       decode: List[String] => T,
       dropFirstLine: Boolean = true
   ): List[T] = {
+    implicit val codec: Codec = Codec("UTF-8")
+    val errorCodec = codec.onUnmappableCharacter(CodingErrorAction.REPORT)
+    println(errorCodec)
     val fileToList = file.lines.toList
     val ls = if (dropFirstLine) fileToList.drop(1) else fileToList
     ls.map(l => decode(l.split(separator, -1).toList))
