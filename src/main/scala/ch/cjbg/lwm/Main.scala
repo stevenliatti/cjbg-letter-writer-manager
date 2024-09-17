@@ -126,7 +126,9 @@ object Main extends App {
       decode: List[String] => T,
       dropFirstLine: Boolean = true
   ): List[T] = {
-    implicit val c = Charset.forName("ISO-8859-1") //ajoute le 29 04 2024 pour utilise le même encodage que celui du fichier CSV
+    implicit val c = Charset.forName(
+      "ISO-8859-1"
+    ) // ajoute le 29 04 2024 pour utilise le même encodage que celui du fichier CSV
     val fileToList = file.lines(c).toList
     val ls = if (dropFirstLine) fileToList.drop(1) else fileToList
     ls.map(l => decode(l.split(separator, -1).toList))
@@ -192,7 +194,10 @@ object Main extends App {
         log(s"Copy '${i.path}' to '$outputDirName/$writerDirName'")
         val destinationImage = File(i.path).copyToDirectory(writerDir)
         val newName = destinationImage.name.split("_").toList.last
-        destinationImage.renameTo(newName)
+        val tryToRename = Try(destinationImage.renameTo(newName))
+        tryToRename.recover(f =>
+          log(s"Fail to rename '${destinationImage.name}' to '$newName'")
+        )
       })
       log(s"Append '${writer.fullname}' to '$outXmlFileName'")
       xmlAppend(writer, xmlFile)
